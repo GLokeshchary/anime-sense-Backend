@@ -1,6 +1,7 @@
 package com.animesense.productservice.config;
 import com.animesense.productservice.filter.JwtAuthFilter;
 import com.animesense.productservice.service.CustomUserDetailsService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
 
 
 @Configuration
@@ -37,7 +41,17 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.csrf().disable()
-                .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and()
+                .cors().configurationSource(new
+                                                    CorsConfigurationSource() {
+                                                        @Override
+                                                        public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                                                            CorsConfiguration cfg=new CorsConfiguration();
+                                                            cfg.setAllowedOrigins(Arrays.asList(
+                                                                    "http://localhost:3000","https://anime-sense.vercel.app"
+                                                            ));
+                                                            return null;
+                                                        }
+                                                    }).and()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/**").permitAll()
                 .and()
