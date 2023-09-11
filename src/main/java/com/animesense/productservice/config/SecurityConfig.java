@@ -24,6 +24,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 
 @Configuration
@@ -49,7 +50,12 @@ public class SecurityConfig implements WebMvcConfigurer {
                                                             cfg.setAllowedOrigins(Arrays.asList(
                                                                     "http://localhost:3000","https://anime-sense.vercel.app"
                                                             ));
-                                                            return null;
+                                                            cfg.setAllowedMethods(Collections.singletonList("*"));
+                                                            cfg.setAllowCredentials(true);
+                                                            cfg.setAllowedHeaders(Collections.singletonList("*"));
+                                                            cfg.setExposedHeaders(Arrays.asList("Authorization"));
+                                                            cfg.setMaxAge(3600L);
+                                                            return cfg;
                                                         }
                                                     }).and()
                 .authorizeHttpRequests()
